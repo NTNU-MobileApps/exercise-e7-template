@@ -36,7 +36,7 @@ class ProductPage extends StatelessWidget {
     return Row(
       children: [
         // TODO - this must show the number of items in the cart dynamically:
-        //  - When no items in the cart - hide this text
+        //  - When no items in the cart - hide this text (remove the Text widget)
         //  - When one t-shirt added to the cart, this must show "1"
         //  - When two L-sized shirts + three XL-shirts added to the cart, this must show 5 (not 2)
         const Text("4", key: Key("cart_item_count")),

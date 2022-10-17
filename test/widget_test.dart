@@ -1,8 +1,17 @@
+import 'package:exercise_e7/main.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  testWidgets("(3) No error message by default", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_findSizeError(), findsNothing);
+  });
 
-  // TODO (1.1) - by default, no products in the cart - no number next to cart icon
+  testWidgets("(1.1) No item count in cart icon", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_getTotalItemCountText(tester), isNull);
+  });
 
   // TODO (2) No size selected by default
 
@@ -30,7 +39,6 @@ void main() {
 
   // TODO (7.2) Can add one L-size t-shirt to the cart
   //    - same conditions as previous test
-
 
   // TODO (7.2) Can add 3 L-size t-shirts to the cart
   //    - the button works
@@ -70,4 +78,39 @@ void main() {
   // TODO (11) When pressing on the first and then 3rd delete icon, only the 2nd item remains in the cart
 
   // TODO (11, 8) When adding three items to the cart, then deleting all of them, we get the "The cart is empty" text again
+}
+
+const _itemCountKey = Key("cart_item_count");
+
+/// Get the count number displayed in the AppBar
+int? _getTotalItemCountText(WidgetTester tester) {
+  final Finder counterFinder = find.byKey(_itemCountKey);
+  try {
+    Text? widget = tester.widget<Text>(counterFinder);
+    String? value = widget.data;
+    return value != null ? int.parse(value) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/// Find the first Text widget inside a given ancestor, return it's text
+String? _findTextDescendantOf(Finder ancestor, WidgetTester tester) {
+  final Finder textFinder = find.descendant(
+    of: ancestor,
+    matching: find.byType(Text),
+  );
+  expect(textFinder, findsOneWidget);
+  final Text textWidget = tester.widget<Text>(textFinder);
+  return textWidget.data;
+}
+
+/// Find the AppBar widget
+Finder _findAppBar() {
+  return find.byType(AppBar);
+}
+
+/// Find the error message complaining about size not being chosen
+Finder _findSizeError() {
+  return find.text("Choose the size first");
 }

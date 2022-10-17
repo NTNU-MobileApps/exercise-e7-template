@@ -58,9 +58,11 @@ Here are the rules of logic you need to implement:
     2. Otherwise the number must represent the total number of t-shirts in the cart. For example, if
        the user adds to M-size t-shirts to the cart, and after that she adds three more L-size
        t-shirts, this number must show 5, because there are 5 t-shirts in the cart.
+    3. Use `key="cart_item_count"` for the Text widget displaying the number of items, otherwise
+       some tests won't work.
 2. The size selector must be "unselected by default", i.e, when the user opens the app, the "Select
    size" must be chosen (this is already implemented at the moment, don't change it).
-3. The error message is hidden by default.
+3. No error message is visible by default.
 4. The count has value 1 by default.
 5. The user can press on the + and - buttons and change the desired t-shirt count with the following
    rules:
@@ -70,8 +72,7 @@ Here are the rules of logic you need to implement:
 6. The "Add to cart" button is enabled by default
 7. When the user presses the "Add to cart" button:
     1. If no size is selected:
-        1. The error message is shown (`Text` widget with `key=text_error`), with the text "
-           Choose the size first".
+        1. An error message saying "Choose the size first" must be shown.
         2. The "Add to cart" button is disabled.
         3. The button is enabled only after the size is selected.
         4. If the "Select size" value is selected again (i.e., no value for the size), the button is
