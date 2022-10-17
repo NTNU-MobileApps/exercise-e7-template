@@ -170,20 +170,31 @@ void main() {
   });
 
   testWidgets("(10) By default no items in the cart", (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: ShoppingCartPage()));
+    await tester.pumpWidget(const MyApp());
+    await _navigateToCart(tester);
     expect(find.byType(CartItemCard), findsNothing);
   });
 
   testWidgets("(10) By default cart-empty message is shown", (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: ShoppingCartPage()));
-    expect(find.text(ShoppingCartPage.emptyCartMessage), findsOneWidget);
+    await tester.pumpWidget(const MyApp());
+    await _navigateToCart(tester);
+    expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
-  // TODO (11) when one product is added, it is displayed in the cart
+  testWidgets("(10) No delete icon when the cart is empty", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _navigateToCart(tester);
+    final Finder trashButton = _findDeleteButton(0);
+    expect(trashButton, findsNothing);
+  });
 
-  // TODO (11) add 2 L-size and then 3 L-size to the cart. These must be visible correctly in the cart
-
-  // TODO (12) Delete icon visible when 1 item in the cart
+  testWidgets("(12) Find delete icon for first product", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("M", 1, tester);
+    await _navigateToCart(tester);
+    final Finder trashButton = _findDeleteButton(0);
+    expect(trashButton, findsOneWidget);
+  });
 
   // TODO (12) When pressing on the delete icon (for a single-item cart), the cart becomes empty, "The cart is empty" text is shown
 
@@ -367,4 +378,19 @@ Future<void> _navigateToCart(WidgetTester tester) async {
 Future<void> _navigateBack(WidgetTester tester) async {
   await tester.pageBack();
   await tester.pumpAndSettle();
+}
+
+/// Find "Delete from cart" icon button with given index
+Finder _findDeleteButton(int index) {
+  final Finder buttons = find.descendant(
+      of: find.byType(CartItemCard), matching: find.byType(IconButton));
+  return buttons.at(index);
+}
+
+/// Check whether the message "The cart is empty" is currently visible
+/// on the screen
+/// Returns true if it is, false otherwise
+bool _isEmptyCartMessageVisible() {
+  final Finder msgFinder = find.text(ShoppingCartPage.emptyCartMessage);
+  return msgFinder.evaluate().length == 1;
 }
