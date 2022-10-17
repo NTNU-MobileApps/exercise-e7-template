@@ -25,14 +25,52 @@ void main() {
     expect(_getSelectedCount(tester), equals(1));
   });
 
-  // TODO (5.1) minus button is disabled by default
+  testWidgets("(5.1) minus button is disabled by default", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+  });
 
-  // TODO (5) can press +: changes the count to 2
-  // TODO (5) can press + twice, count is 3, + amd - buttons enabled
-  // TODO (5.1) can't press - when count is 1
+  testWidgets("(5) plus button is enabled by default", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isIconButtonEnabled(ProductPage.plusButtonKey, tester), isTrue);
+  });
+
+  testWidgets("(5) pressing + changes the count to 2", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_getSelectedCount(tester), equals(1));
+    await _tapPlus(tester);
+    expect(_getSelectedCount(tester), equals(2));
+  });
+
+  testWidgets("(5) pressing + twice changes the count to 3", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_getSelectedCount(tester), equals(1));
+    await _tapPlus(tester, times: 2);
+    expect(_getSelectedCount(tester), equals(3));
+  });
+
+  testWidgets("(5) pressing + enabled the minus button", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    await _tapPlus(tester);
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+  });
+
+  testWidgets("(5) minus button disabled when count becomes 1", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    await _tapPlus(tester);
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+    await _tapMinus(tester);
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    await _tapPlus(tester, times: 3);
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+    await _tapMinus(tester, times: 3);
+    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+  });
+
   // TODO (5.2) can't press + when count is 10
   // TODO (5) can press + 9 times, then - once, then + again. Count is 10
-  // TODO (5) can press +, then -. Count is 1, - button disabled
 
   // TODO (7) The "Add to cart" button is enabled by default
 
@@ -98,27 +136,13 @@ int? _getTotalItemCountText(WidgetTester tester) {
   }
 }
 
-/// Find the first Text widget inside a given ancestor, return it's text
-String? _findTextDescendantOf(Finder ancestor, WidgetTester tester) {
-  final Finder textFinder = find.descendant(
-    of: ancestor,
-    matching: find.byType(Text),
-  );
-  expect(textFinder, findsOneWidget);
-  final Text textWidget = tester.widget<Text>(textFinder);
-  return textWidget.data;
-}
-
-/// Find the AppBar widget
-Finder _findAppBar() {
-  return find.byType(AppBar);
-}
-
 /// Find the error message complaining about size not being chosen
 Finder _findSizeError() {
   return find.text("Choose the size first");
 }
 
+/// Get the currently selected t-shirt size value
+/// Note: does not filter out the "Select size" value, simply returns it!
 String _getSelectedSize(WidgetTester tester) {
   final Finder sizeFinder = find.byType(DropdownButton<String>);
   expect(sizeFinder, findsOneWidget);
@@ -126,6 +150,8 @@ String _getSelectedSize(WidgetTester tester) {
   return selector.value!;
 }
 
+/// Get currently selected t-shirt count to be added to the cart
+/// Note: expects the "Count: c" format, returns c!
 int _getSelectedCount(WidgetTester tester) {
   final Finder countFinder = find.byKey(ProductPage.addCountKey);
   expect(countFinder, findsOneWidget);
@@ -134,4 +160,29 @@ int _getSelectedCount(WidgetTester tester) {
   expect(value, isNotNull);
   expect(value!.substring(0, 7), equals("Count: "));
   return int.parse(value.substring(7));
+}
+
+/// Tap on the + button specified number of times
+Future<void> _tapPlus(WidgetTester tester, {int times = 1}) async {
+  await _tapButton(tester, ProductPage.plusButtonKey, times: times);
+}
+
+/// Tap on the - button specified number of times
+Future<void> _tapMinus(WidgetTester tester, {int times = 1}) async {
+  await _tapButton(tester, ProductPage.minusButtonKey, times: times);
+}
+
+/// Tap on the given button (found by the key) specified number of times
+Future<void> _tapButton(WidgetTester tester, Key key, {int times = 1}) async {
+  final Finder button = find.byKey(key);
+  for (var i = 0; i < times; ++i) {
+    await tester.tap(button);
+  }
+}
+
+/// Check whether button with given title is enabled
+/// return: True if it is enabled, false if not.
+bool _isIconButtonEnabled(Key buttonKey, WidgetTester tester) {
+  final IconButton button = tester.widget(find.byKey(buttonKey));
+  return button.onPressed != null;
 }

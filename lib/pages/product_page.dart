@@ -8,6 +8,8 @@ class ProductPage extends StatelessWidget {
   const ProductPage({Key? key}) : super(key: key);
   static const cartItemCountKey = Key("cart_item_count_text");
   static const addCountKey = Key("add_count_text");
+  static const minusButtonKey = Key("minus_button");
+  static const plusButtonKey = Key("plus_button");
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +80,16 @@ class ProductPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-              onPressed: _decrementCount, icon: const Icon(Icons.remove)),
+            key: minusButtonKey,
+            onPressed: _decrementCount,
+            icon: const Icon(Icons.remove),
+          ),
           Text("Count: 7", key: addCountKey),
-          IconButton(onPressed: _incrementCount, icon: const Icon(Icons.add)),
+          IconButton(
+            key: plusButtonKey,
+            onPressed: _incrementCount,
+            icon: const Icon(Icons.add),
+          ),
         ],
       ),
     );
