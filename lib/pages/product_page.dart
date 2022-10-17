@@ -6,6 +6,8 @@ import 'shopping_cart_page.dart';
 /// Represents the product page
 class ProductPage extends StatelessWidget {
   const ProductPage({Key? key}) : super(key: key);
+  static const cartItemCountKey = Key("cart_item_count_text");
+  static const addCountKey = Key("add_count_text");
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ProductPage extends StatelessWidget {
         //  - When no items in the cart - hide this text (remove the Text widget)
         //  - When one t-shirt added to the cart, this must show "1"
         //  - When two L-sized shirts + three XL-shirts added to the cart, this must show 5 (not 2)
-        const Text("4", key: Key("cart_item_count")),
+        Text("4", key: cartItemCountKey),
         IconButton(
           onPressed: () => _showShoppingCartPage(context),
           icon: const Icon(Icons.shopping_cart),
@@ -77,7 +79,7 @@ class ProductPage extends StatelessWidget {
         children: [
           IconButton(
               onPressed: _decrementCount, icon: const Icon(Icons.remove)),
-          Text("Count: 7"),
+          Text("Count: 7", key: addCountKey),
           IconButton(onPressed: _incrementCount, icon: const Icon(Icons.add)),
         ],
       ),

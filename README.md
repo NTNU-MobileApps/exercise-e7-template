@@ -58,8 +58,8 @@ Here are the rules of logic you need to implement:
     2. Otherwise the number must represent the total number of t-shirts in the cart. For example, if
        the user adds to M-size t-shirts to the cart, and after that she adds three more L-size
        t-shirts, this number must show 5, because there are 5 t-shirts in the cart.
-    3. Use `key="cart_item_count"` for the Text widget displaying the number of items, otherwise
-       some tests won't work.
+    3. Use `key="cart_item_count_text"` for the Text widget displaying the number of items,
+       otherwise some tests won't work.
 2. The size selector must be "unselected by default", i.e, when the user opens the app, the "Select
    size" must be chosen (this is already implemented at the moment, don't change it).
 3. No error message is visible by default.
@@ -69,8 +69,11 @@ Here are the rules of logic you need to implement:
     1. When the count reaches 1, the - button is disabled (the count can't go below 1).
     2. When the count reaches 10, the + button is disabled (not allowed to add more than 10 shirts
        to the cart at once. However, the total number of t-shirts can be higher than that).
-6. The "Add to cart" button is enabled by default
-7. When the user presses the "Add to cart" button:
+6. The count must be displayed in the text field with` key="add_count_text"` in the
+   format `Count: <c>`, where `<c>` is replaced by the current count selected by the user.
+   Example: `Count: 7`.
+7. The "Add to cart" button is enabled by default
+8. When the user presses the "Add to cart" button:
     1. If no size is selected:
         1. An error message saying "Choose the size first" must be shown.
         2. The "Add to cart" button is disabled.
@@ -86,11 +89,11 @@ Here are the rules of logic you need to implement:
         2. The number next to the shopping cart icon is updated accordingly to display the current
            number of t-shirts in the cart.
         3. The error message is hidden (if it was visible).
-8. When the user presses on the cart icon (or the number next to it), the shopping cart page is
+9. When the user presses on the cart icon (or the number next to it), the shopping cart page is
    opened (this is implemented already, don't break it ;)).
-9. If the shopping cart is empty, instead of displaying a `CartItemCard` list, the shopping cart
-   page must show a text saying "The cart is empty".
-10. The shopping cart page must display the items currently in the cart (`CartItem` objects). Use
+10. If the shopping cart is empty, instead of displaying a `CartItemCard` list, the shopping cart
+    page must show a text saying "The cart is empty".
+11. The shopping cart page must display the items currently in the cart (`CartItem` objects). Use
     the
     `CartItemCard` widget, this is provided already. Just make sure you connect the real content of
     the shopping cart in your state storage (logic) to the UI:
@@ -98,7 +101,7 @@ Here are the rules of logic you need to implement:
     2. The items in the cart must be in the order of adding, top-down. For example, if the user
        chooses 2x M-size shirts, and 3x L-size shirts, the "2x Green T-shirt, size M" must be shown
        first (on top), the "3x Green T-shirt, size L" is shown second (bottom).
-11. When the user clicks on a trash can on the right side of a `CartItemCard`, the corresponding
+12. When the user clicks on a trash can on the right side of a `CartItemCard`, the corresponding
     item must be deleted from the cart and:
     1. The list of products in the shopping cart page must be updated.
     2. The number of products in the cart (in the product page) must also be automatically updated.
