@@ -27,7 +27,7 @@ void main() {
 
   testWidgets("(5.1) minus button is disabled by default", (tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    expect(_isMinusButtonEnabled(tester), isFalse);
   });
 
   testWidgets("(5) plus button is enabled by default", (tester) async {
@@ -51,26 +51,39 @@ void main() {
 
   testWidgets("(5) pressing + enabled the minus button", (tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    expect(_isMinusButtonEnabled(tester), isFalse);
     await _tapPlus(tester);
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+    expect(_isMinusButtonEnabled(tester), isTrue);
   });
 
   testWidgets("(5) minus button disabled when count becomes 1", (tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    expect(_isMinusButtonEnabled(tester), isFalse);
     await _tapPlus(tester);
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+    expect(_isMinusButtonEnabled(tester), isTrue);
     await _tapMinus(tester);
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    expect(_isMinusButtonEnabled(tester), isFalse);
     await _tapPlus(tester, times: 3);
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isTrue);
+    expect(_isMinusButtonEnabled(tester), isTrue);
     await _tapMinus(tester, times: 3);
-    expect(_isIconButtonEnabled(ProductPage.minusButtonKey, tester), isFalse);
+    expect(_isMinusButtonEnabled(tester), isFalse);
   });
 
-  // TODO (5.2) can't press + when count is 10
-  // TODO (5) can press + 9 times, then - once, then + again. Count is 10
+  testWidgets("(5.2) cannot press + when count is 10", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isPlusButtonEnabled(tester), isTrue);
+    await _tapPlus(tester, times: 9);
+    expect(_isPlusButtonEnabled(tester), isFalse);
+  });
+
+  testWidgets("(5) 9x plus, 1x minus => plus button enabled", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isPlusButtonEnabled(tester), isTrue);
+    await _tapPlus(tester, times: 9);
+    expect(_isPlusButtonEnabled(tester), isFalse);
+    await _tapMinus(tester);
+    expect(_isPlusButtonEnabled(tester), isTrue);
+  });
 
   // TODO (7) The "Add to cart" button is enabled by default
 
@@ -185,4 +198,14 @@ Future<void> _tapButton(WidgetTester tester, Key key, {int times = 1}) async {
 bool _isIconButtonEnabled(Key buttonKey, WidgetTester tester) {
   final IconButton button = tester.widget(find.byKey(buttonKey));
   return button.onPressed != null;
+}
+
+/// Check whether the + button is enabled
+bool _isPlusButtonEnabled(WidgetTester tester) {
+  return _isIconButtonEnabled(ProductPage.plusButtonKey, tester);
+}
+
+/// Check whether the - button is enabled
+bool _isMinusButtonEnabled(WidgetTester tester) {
+  return _isIconButtonEnabled(ProductPage.minusButtonKey, tester);
 }
