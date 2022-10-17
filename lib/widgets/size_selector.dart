@@ -9,11 +9,14 @@ class SizeSelector extends StatefulWidget {
 
   const SizeSelector({Key? key, required this.onSelected}) : super(key: key);
 
+  static const Key selectorKey = Key("size_selector");
+
   @override
   State<SizeSelector> createState() => _SizeSelectorState();
 
   // Special constant which is not really a size
   static const noSize = "Select size";
+
   // Allowed sizes
   static const sizes = [noSize, "S", "M", "L", "XL"];
 }
@@ -21,10 +24,10 @@ class SizeSelector extends StatefulWidget {
 class _SizeSelectorState extends State<SizeSelector> {
   String? selectedValue = SizeSelector.noSize;
 
-
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      key: SizeSelector.selectorKey,
       items: SizeSelector.sizes
           .map((size) => DropdownMenuItem(value: size, child: Text(size)))
           .toList(),
@@ -40,7 +43,7 @@ class _SizeSelectorState extends State<SizeSelector> {
     setState(() {
       selectedValue = size;
     });
-    
+
     // Notify the listener (parent)
     widget.onSelected(size != SizeSelector.noSize ? size : null);
   }

@@ -1,13 +1,22 @@
+import 'package:exercise_e7/pages/shopping_cart_page.dart';
 import 'package:exercise_e7/main.dart';
 import 'package:exercise_e7/pages/product_page.dart';
+import 'package:exercise_e7/widgets/cart_item_card.dart';
 import 'package:exercise_e7/widgets/size_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'size_and_count.dart';
+
 void main() {
-  testWidgets("(3) No error message by default", (tester) async {
+  testWidgets("(0) Size selector works", (tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(_findSizeError(), findsNothing);
+    await _selectSize("M", tester);
+    expect(_getSelectedSize(tester), equals("M"));
+    await _selectSize("S", tester);
+    expect(_getSelectedSize(tester), equals("S"));
+    await _selectSize("L", tester);
+    expect(_getSelectedSize(tester), equals("L"));
   });
 
   testWidgets("(1.1) No item count in cart icon", (tester) async {
@@ -18,6 +27,11 @@ void main() {
   testWidgets("(2) No size selected by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getSelectedSize(tester), equals(SizeSelector.noSize));
+  });
+
+  testWidgets("(3) No error message by default", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isSizeErrorDisplayed(tester), isFalse);
   });
 
   testWidgets("(4) count==1 by default", (tester) async {
@@ -85,36 +99,85 @@ void main() {
     expect(_isPlusButtonEnabled(tester), isTrue);
   });
 
-  // TODO (7) The "Add to cart" button is enabled by default
+  testWidgets("(7) [Add to cart] button is enabled by default", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(_isSubmitButtonEnabled(tester), isTrue);
+  });
 
-  // TODO (8.1.1) when trying to add a product with no size to the cart - show error
+  testWidgets("(8.1.1) Error when add a product with no size", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _tapAdd(tester);
+    expect(_isSizeErrorDisplayed(tester), isTrue);
+  });
 
-  // TODO (8.2) Can add one M-size t-shirt to the cart:
-  //    - (7) the button works
-  //    - no error shown
-  //    - (1.2) action bar shows 1 after the product is added
+  testWidgets("(8.2) Can add one M-size t-shirt to the cart", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("M", 1, tester);
+    await _checkItemsInCart([SizeAndCount("M", 1)], tester);
+  });
 
-  // TODO (8.2) Can add one L-size t-shirt to the cart
-  //    - same conditions as previous test
+  testWidgets("(8.2) Can add one L-size t-shirt to the cart", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 1, tester);
+    await _checkItemsInCart([SizeAndCount("L", 1)], tester);
+  });
 
-  // TODO (8.2) Can add 3 L-size t-shirts to the cart
-  //    - the button works
-  //    - no error shown
-  //    - action bar shows 3 after the product is added
+  testWidgets("(8.2) Can add 3x L-size t-shirts to the cart", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 3, tester);
+    await _checkItemsInCart([SizeAndCount("L", 3)], tester);
+  });
 
-  // TODO (8.2) Can add 2 L-size and then 3 L-size to the cart:
-  //    - the button works
-  //    - no error shown
-  //    - action bar shows 5 after the products are added
+  testWidgets("(8.2) Can add 10x L-size t-shirts to the cart", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 10, tester);
+    await _checkItemsInCart([SizeAndCount("L", 10)], tester);
+  });
 
-  // TODO (8.2) can add 2 L-size and then 3 S-size to the cart:
-  //    - the button works
-  //    - no error shown
-  //    - action bar shows 5 after the products are added
+  testWidgets("(8.2) Can add 2x L-size and 3x L-size t-shirts to the cart",
+      (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 2, tester);
+    await _addToCart("L", 3, tester);
+    await _checkItemsInCart(
+        [SizeAndCount("L", 2), SizeAndCount("L", 3)], tester);
+  });
 
-  // TODO (9) Click to the cart icon opens shopping cart page
+  testWidgets("(8.2) Can add twice 10x L-size t-shirts to the cart",
+      (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 10, tester);
+    await _addToCart("L", 10, tester);
+    await _checkItemsInCart(
+        [SizeAndCount("L", 10), SizeAndCount("L", 10)], tester);
+  });
 
-  // TODO (10) By default, the shopping cart page shows "No items in the cart"
+  testWidgets("(8.2) Can add 2x L-size and 4x S-size t-shirts to the cart",
+      (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("L", 2, tester);
+    await _addToCart("S", 4, tester);
+    await _checkItemsInCart(
+        [SizeAndCount("L", 2), SizeAndCount("S", 4)], tester);
+  });
+
+  testWidgets("(9) Click to the cart icon opens shopping cart page",
+      (tester) async {
+    await tester.pumpWidget(const MyApp());
+    expect(find.byType(ShoppingCartPage), findsNothing);
+    await _navigateToCart(tester);
+    expect(find.byType(ShoppingCartPage), findsOneWidget);
+  });
+
+  testWidgets("(10) By default no items in the cart", (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ShoppingCartPage()));
+    expect(find.byType(CartItemCard), findsNothing);
+  });
+
+  testWidgets("(10) By default cart-empty message is shown", (tester) async {
+    await tester.pumpWidget(const MaterialApp(home: ShoppingCartPage()));
+    expect(find.text(ShoppingCartPage.emptyCartMessage), findsOneWidget);
+  });
 
   // TODO (11) when one product is added, it is displayed in the cart
 
@@ -149,9 +212,15 @@ int? _getTotalItemCountText(WidgetTester tester) {
   }
 }
 
-/// Find the error message complaining about size not being chosen
-Finder _findSizeError() {
-  return find.text("Choose the size first");
+/// Check whether  message complaining about size not being chosen is displayed
+/// Returns true if the error message is shown, false otherwise
+bool _isSizeErrorDisplayed(WidgetTester tester) {
+  try {
+    tester.widget<Text>(find.text("Choose the size first"));
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 /// Get the currently selected t-shirt size value
@@ -185,18 +254,31 @@ Future<void> _tapMinus(WidgetTester tester, {int times = 1}) async {
   await _tapButton(tester, ProductPage.minusButtonKey, times: times);
 }
 
+/// Tap on the "Add to cart" button
+Future<void> _tapAdd(WidgetTester tester) async {
+  await _tapButton(tester, ProductPage.addToCartKey, times: 1);
+}
+
 /// Tap on the given button (found by the key) specified number of times
 Future<void> _tapButton(WidgetTester tester, Key key, {int times = 1}) async {
   final Finder button = find.byKey(key);
   for (var i = 0; i < times; ++i) {
     await tester.tap(button);
+    await tester.pump();
   }
 }
 
-/// Check whether button with given title is enabled
+/// Check whether icon-button with given key is enabled
 /// return: True if it is enabled, false if not.
 bool _isIconButtonEnabled(Key buttonKey, WidgetTester tester) {
   final IconButton button = tester.widget(find.byKey(buttonKey));
+  return button.onPressed != null;
+}
+
+/// Check whether button with given key is enabled
+/// return: True if it is enabled, false if not.
+bool _isElevatedButtonEnabled(Key buttonKey, WidgetTester tester) {
+  final ElevatedButton button = tester.widget(find.byKey(buttonKey));
   return button.onPressed != null;
 }
 
@@ -208,4 +290,81 @@ bool _isPlusButtonEnabled(WidgetTester tester) {
 /// Check whether the - button is enabled
 bool _isMinusButtonEnabled(WidgetTester tester) {
   return _isIconButtonEnabled(ProductPage.minusButtonKey, tester);
+}
+
+/// Check whether the "Add to cart"  button is enabled
+bool _isSubmitButtonEnabled(WidgetTester tester) {
+  return _isElevatedButtonEnabled(ProductPage.addToCartKey, tester);
+}
+
+/// Try to add current t-shirt configuration (given size, given count) to cart
+/// Assume that at the start of this function the count is equal to 1
+/// Throws assert-exception is something fails
+Future<void> _addToCart(String size, int count, WidgetTester tester) async {
+  await _selectSize(size, tester);
+  await _tapPlus(tester, times: count - 1);
+  await _tapAdd(tester);
+  expect(_isSizeErrorDisplayed(tester), isFalse);
+
+  // Ensure that we reset the count to 1 again
+  await _tapMinus(tester, times: count - 1);
+}
+
+/// Select the given size
+Future<void> _selectSize(String size, WidgetTester tester) async {
+  final Finder selector = find.byKey(SizeSelector.selectorKey);
+  await tester.tap(selector);
+  await tester.pump();
+  // Warning: can't select descendant of the DropdownButton here,
+  // because the popup-list with values is pushed as a new widget right
+  // on the MaterialApp, it is NOT inside the DropdownButton
+  final Finder item = find.text(size).last;
+  await tester.tap(item);
+  await tester.pumpAndSettle();
+}
+
+/// Assume that we are on Product page at the start.
+/// Check whether the number of items is displayed as expected.
+/// Then navigate to ShoppingCart and check if items there are as expected.
+/// Then navigate back to the product page
+Future<void> _checkItemsInCart(
+    List<SizeAndCount> items, WidgetTester tester) async {
+  final int totalCount = items.fold(0, (prev, item) => prev + item.count);
+
+  // Check the item count and error message on product page
+  print("Expect $totalCount items in the cart");
+  expect(_getTotalItemCountText(tester), equals(totalCount));
+  expect(_isSizeErrorDisplayed(tester), isFalse);
+
+  // Go to Shopping cart, check the items
+  await _navigateToCart(tester);
+  final List<SizeAndCount> itemsInCart = _getItemsInCart(tester);
+  expect(items, equals(itemsInCart));
+
+  // Go back to product page
+  await _navigateBack(tester);
+  expect(find.byType(ProductPage), findsOneWidget);
+}
+
+/// Get products currently shown in the cart, as SizeAndCount objects
+List<SizeAndCount> _getItemsInCart(WidgetTester tester) {
+  final Finder cardFinder = find.byType(CartItemCard);
+  final Iterable<CartItemCard> cards =
+      tester.widgetList<CartItemCard>(cardFinder);
+  return cards.map((card) => SizeAndCount.fromItem(card.item)).toList();
+}
+
+/// Navigate to the ShoppingCart page
+/// We assume that we are currently on the product page
+Future<void> _navigateToCart(WidgetTester tester) async {
+  final Finder cartIcon = find.byKey(ProductPage.openCartKey);
+  expect(cartIcon, findsOneWidget);
+  await tester.tap(cartIcon);
+  await tester.pumpAndSettle();
+}
+
+/// Navigate back to previus page
+Future<void> _navigateBack(WidgetTester tester) async {
+  await tester.pageBack();
+  await tester.pumpAndSettle();
 }

@@ -10,6 +10,9 @@ class ProductPage extends StatelessWidget {
   static const addCountKey = Key("add_count_text");
   static const minusButtonKey = Key("minus_button");
   static const plusButtonKey = Key("plus_button");
+  static const addToCartKey = Key("add_to_cart_button");
+  static const openCartKey = Key("open_cart_button");
+  static const String sizeErrorMessage = "Choose the size first";
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,7 @@ class ProductPage extends StatelessWidget {
         //  - When two L-sized shirts + three XL-shirts added to the cart, this must show 5 (not 2)
         Text("4", key: cartItemCountKey),
         IconButton(
+          key: openCartKey,
           onPressed: () => _showShoppingCartPage(context),
           icon: const Icon(Icons.shopping_cart),
         ),
@@ -98,11 +102,13 @@ class ProductPage extends StatelessWidget {
   /// Build the "Add to cart" button
   Widget _buildButton() {
     return ElevatedButton(
-        onPressed: _addToCart,
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text("Add to cart"),
-        ));
+      key: addToCartKey,
+      onPressed: _addToCart,
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text("Add to cart"),
+      ),
+    );
   }
 
   /// This method is called when a new size is selected
