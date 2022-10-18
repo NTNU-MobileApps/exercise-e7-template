@@ -72,16 +72,9 @@ Here are the rules of logic you need to implement:
 6. The count must be displayed in the text field with` key="add_count_text"` in the
    format `Count: <c>`, where `<c>` is replaced by the current count selected by the user.
    Example: `Count: 7`.
-7. The "Add to cart" button is enabled by default
-8. When the user presses the "Add to cart" button:
+7. When the user presses the "Add to cart" button:
     1. If no size is selected:
         1. An error message saying "Choose the size first" must be shown.
-        2. The "Add to cart" button is disabled.
-        3. The button is enabled only after the size is selected.
-        4. If the "Select size" value is selected again (i.e., no value for the size), the button is
-           disabled again. That is - the button enabling/disabling depends on whether the size is
-           valid, but this check is only started the first time the user presses the "Add to cart"
-           button.
     2. If a size is selected:
         1. The selected count of t-shirts of selected size are added to a cart, as a "single"
            item. See the `CartItem` class. The shopping cart must be stored somewhere in your "
@@ -89,11 +82,11 @@ Here are the rules of logic you need to implement:
         2. The number next to the shopping cart icon is updated accordingly to display the current
            number of t-shirts in the cart.
         3. The error message is hidden (if it was visible).
-9. When the user presses on the cart icon (or the number next to it), the shopping cart page is
+8. When the user presses on the cart icon (or the number next to it), the shopping cart page is
    opened (this is implemented already, don't break it ;)).
-10. If the shopping cart is empty, instead of displaying a `CartItemCard` list, the shopping cart
-    page must show a text saying "The cart is empty".
-11. The shopping cart page must display the items currently in the cart (`CartItem` objects). Use
+9. If the shopping cart is empty, instead of displaying a `CartItemCard` list, the shopping cart
+   page must show a text saying "The cart is empty".
+10. The shopping cart page must display the items currently in the cart (`CartItem` objects). Use
     the
     `CartItemCard` widget, this is provided already. Just make sure you connect the real content of
     the shopping cart in your state storage (logic) to the UI:
@@ -101,7 +94,7 @@ Here are the rules of logic you need to implement:
     2. The items in the cart must be in the order of adding, top-down. For example, if the user
        chooses 2x M-size shirts, and 3x L-size shirts, the "2x Green T-shirt, size M" must be shown
        first (on top), the "3x Green T-shirt, size L" is shown second (bottom).
-12. When the user clicks on a trash can on the right side of a `CartItemCard`, the corresponding
+11. When the user clicks on a trash can on the right side of a `CartItemCard`, the corresponding
     item must be deleted from the cart and:
     1. The list of products in the shopping cart page must be updated.
     2. The number of products in the cart (in the product page) must also be automatically updated.
