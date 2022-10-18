@@ -23,7 +23,7 @@ class CartItem {
   }
 
   /// Returns true if the item contains valid values
-  bool isValid() => size != null && count > 1;
+  bool isValid() => size != null && count > 0;
 
   @override
   String toString() {
