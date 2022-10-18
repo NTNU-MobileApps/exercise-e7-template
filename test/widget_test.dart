@@ -196,19 +196,36 @@ void main() {
     expect(trashButton, findsOneWidget);
   });
 
-  // TODO (12) When pressing on the delete icon (for a single-item cart), the cart becomes empty, "The cart is empty" text is shown
+  testWidgets("(12) Add and delete a product", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _addToCart("M", 1, tester);
+    await _checkItemsInCart([SizeAndCount("M", 1)], tester);
+    await _navigateToCart(tester);
+    await _deleteItemFromCart(0, tester);
+    expect(_isEmptyCartMessageVisible(), isTrue);
+  });
 
-  // TODO (12) When pressing on the delete icon on the 1st of 3 items (2xS shirts, 3xM shirts, 1x XL shirt), the first item disappears
+  testWidgets("(12) Add 3 items, delete 1st", (tester) async {
+    await _testThreeProductDeletionScenario([0], tester);
+  });
 
-  // TODO (12, 1) When pressing on the delete icon on the 1st of 3 items (2xS shirts, 3xM shirts, 1x XL shirt), the first item disappears. When we go back to the product page, the number of items in the cart is updated.
+  testWidgets("(12) Add 3 items, delete 2nd", (tester) async {
+    await _testThreeProductDeletionScenario([1], tester);
+  });
 
-  // TODO (12) When pressing on the delete icon on the 2nd of 3 items (2xS shirts, 3xM shirts, 1x XL shirt), the 2nd item disappears
+  testWidgets("(12) Add 3 items, delete 3rd", (tester) async {
+    await _testThreeProductDeletionScenario([2], tester);
+  });
 
-  // TODO (12) When pressing on the delete icon on the 3rd of 3 items (2xS shirts, 3xM shirts, 1x XL shirt), the 3rd item disappears
+  testWidgets("(12) Add 3 items, delete 1st and 3rd", (tester) async {
+    // After deleting the 1st item (index 0), the third item has now index 1
+    await _testThreeProductDeletionScenario([0, 1], tester);
+  });
 
-  // TODO (12) When pressing on the first and then 3rd delete icon, only the 2nd item remains in the cart
-
-  // TODO (12, 8) When adding three items to the cart, then deleting all of them, we get the "The cart is empty" text again
+  testWidgets("(12) Add 3 items, delete all", (tester) async {
+    // Delete 2nd (index 1), then 1st (index 0), then the third (index is now 0)
+    await _testThreeProductDeletionScenario([1, 0, 0], tester);
+  });
 }
 
 /// Get the count number displayed in the AppBar
@@ -393,4 +410,38 @@ Finder _findDeleteButton(int index) {
 bool _isEmptyCartMessageVisible() {
   final Finder msgFinder = find.text(ShoppingCartPage.emptyCartMessage);
   return msgFinder.evaluate().length == 1;
+}
+
+/// Test a scenario where three products are added to the cart, then products
+/// with specified indexes are deleted one by one. After each step, check
+/// whether the products in the cart match the expectation.
+/// Check if "Empty cart" message is shown when no products should be left
+/// in the cart
+Future<void> _testThreeProductDeletionScenario(
+    List<int> itemsToDelete, WidgetTester tester) async {
+  await tester.pumpWidget(const MyApp());
+  List<SizeAndCount> products = [
+    SizeAndCount("S", 2),
+    SizeAndCount("M", 3),
+    SizeAndCount("XL", 1),
+  ];
+  await _checkItemsInCart(products, tester);
+
+  for (final deleteIndex in itemsToDelete) {
+    print("Deleting item with index $deleteIndex...");
+    await _navigateToCart(tester);
+    await _deleteItemFromCart(deleteIndex, tester);
+    products.removeAt(deleteIndex);
+    expect(_isEmptyCartMessageVisible(), products.isEmpty);
+    await _navigateBack(tester);
+    await _checkItemsInCart(products, tester);
+  }
+}
+
+/// Delete item with given index from the cart by clicking on it's Trash button
+/// (Assume we start in shopping cart page)
+Future<void> _deleteItemFromCart(int index, WidgetTester tester) async {
+  final Finder trashButton = find.byType(IconButton).at(index);
+  await tester.tap(trashButton);
+  await tester.pumpAndSettle();
 }
