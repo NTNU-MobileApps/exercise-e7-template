@@ -99,11 +99,6 @@ void main() {
     expect(_isPlusButtonEnabled(tester), isTrue);
   });
 
-  testWidgets("(7) [Add to cart] button is enabled by default", (tester) async {
-    await tester.pumpWidget(const MyApp());
-    expect(_isSubmitButtonEnabled(tester), isTrue);
-  });
-
   testWidgets("(7.1) Error when add a product with no size", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _tapAdd(tester);
@@ -309,13 +304,6 @@ bool _isIconButtonEnabled(Key buttonKey, WidgetTester tester) {
   return button.onPressed != null;
 }
 
-/// Check whether button with given key is enabled
-/// return: True if it is enabled, false if not.
-bool _isElevatedButtonEnabled(Key buttonKey, WidgetTester tester) {
-  final ElevatedButton button = tester.widget(find.byKey(buttonKey));
-  return button.onPressed != null;
-}
-
 /// Check whether the + button is enabled
 bool _isPlusButtonEnabled(WidgetTester tester) {
   return _isIconButtonEnabled(ProductPage.plusButtonKey, tester);
@@ -324,11 +312,6 @@ bool _isPlusButtonEnabled(WidgetTester tester) {
 /// Check whether the - button is enabled
 bool _isMinusButtonEnabled(WidgetTester tester) {
   return _isIconButtonEnabled(ProductPage.minusButtonKey, tester);
-}
-
-/// Check whether the "Add to cart"  button is enabled
-bool _isSubmitButtonEnabled(WidgetTester tester) {
-  return _isElevatedButtonEnabled(ProductPage.addToCartKey, tester);
 }
 
 /// Try to add current t-shirt configuration (given size, given count) to cart
