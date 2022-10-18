@@ -135,7 +135,7 @@ class ProductPage extends StatelessWidget {
   /// Navigate to the shopping cart page
   void _showShoppingCartPage(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ShoppingCartPage(),
+      builder: (context) => const ShoppingCartPage(),
     ));
   }
 }
