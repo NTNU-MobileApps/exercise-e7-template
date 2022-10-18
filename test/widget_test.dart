@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'size_and_count.dart';
 
 void main() {
-  testWidgets("(0) Size selector works", (tester) async {
+  testWidgets("Size selector works", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _selectSize("M", tester);
     expect(_getSelectedSize(tester), equals("M"));
@@ -19,58 +19,58 @@ void main() {
     expect(_getSelectedSize(tester), equals("L"));
   });
 
-  testWidgets("(1.1) No item count in cart icon", (tester) async {
+  testWidgets("No item count in cart icon", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getTotalItemCountText(tester), 0);
   });
 
-  testWidgets("(2) No size selected by default", (tester) async {
+  testWidgets("No size selected by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getSelectedSize(tester), equals(SizeSelector.noSize));
   });
 
-  testWidgets("(3) No error message by default", (tester) async {
+  testWidgets("No error message by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isSizeErrorDisplayed(tester), isFalse);
   });
 
-  testWidgets("(4) count==1 by default", (tester) async {
+  testWidgets("Count is 1 by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getSelectedCount(tester), equals(1));
   });
 
-  testWidgets("(5.1) minus button is disabled by default", (tester) async {
+  testWidgets("Minus button is disabled by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isMinusButtonEnabled(tester), isFalse);
   });
 
-  testWidgets("(5) plus button is enabled by default", (tester) async {
+  testWidgets("Plus button is enabled by default", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isIconButtonEnabled(ProductPage.plusButtonKey, tester), isTrue);
   });
 
-  testWidgets("(5) pressing + changes the count to 2", (tester) async {
+  testWidgets("Pressing plus changes the count to 2", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getSelectedCount(tester), equals(1));
     await _tapPlus(tester);
     expect(_getSelectedCount(tester), equals(2));
   });
 
-  testWidgets("(5) pressing + twice changes the count to 3", (tester) async {
+  testWidgets("Pressing plus twice changes the count to 3", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_getSelectedCount(tester), equals(1));
     await _tapPlus(tester, times: 2);
     expect(_getSelectedCount(tester), equals(3));
   });
 
-  testWidgets("(5) pressing + enabled the minus button", (tester) async {
+  testWidgets("Pressing plus enables the minus button", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isMinusButtonEnabled(tester), isFalse);
     await _tapPlus(tester);
     expect(_isMinusButtonEnabled(tester), isTrue);
   });
 
-  testWidgets("(5) minus button disabled when count becomes 1", (tester) async {
+  testWidgets("Minus button disabled when count becomes 1", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isMinusButtonEnabled(tester), isFalse);
     await _tapPlus(tester);
@@ -83,14 +83,14 @@ void main() {
     expect(_isMinusButtonEnabled(tester), isFalse);
   });
 
-  testWidgets("(5.2) cannot press + when count is 10", (tester) async {
+  testWidgets("Cannot press plus when count is 10", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isPlusButtonEnabled(tester), isTrue);
     await _tapPlus(tester, times: 9);
     expect(_isPlusButtonEnabled(tester), isFalse);
   });
 
-  testWidgets("(5) 9x plus, 1x minus => plus button enabled", (tester) async {
+  testWidgets("9x plus, 1x minus => plus button enabled", (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(_isPlusButtonEnabled(tester), isTrue);
     await _tapPlus(tester, times: 9);
@@ -99,13 +99,13 @@ void main() {
     expect(_isPlusButtonEnabled(tester), isTrue);
   });
 
-  testWidgets("(7.1) Error when add a product with no size", (tester) async {
+  testWidgets("Error when add a product with no size", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _tapAdd(tester);
     expect(_isSizeErrorDisplayed(tester), isTrue);
   });
 
-  testWidgets("(7.1) Add a no-size, then M-size: no error", (tester) async {
+  testWidgets("Add a no-size, then M-size: no error", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _tapAdd(tester);
     expect(_isSizeErrorDisplayed(tester), isTrue);
@@ -114,31 +114,31 @@ void main() {
     expect(_isSizeErrorDisplayed(tester), isFalse);
   });
 
-  testWidgets("(7.2) Can add one M-size t-shirt to the cart", (tester) async {
+  testWidgets("Can add one M-size t-shirt to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _checkItemsInCart([SizeAndCount("M", 1)], tester);
   });
 
-  testWidgets("(7.2) Can add one L-size t-shirt to the cart", (tester) async {
+  testWidgets("Can add one L-size t-shirt to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 1, tester);
     await _checkItemsInCart([SizeAndCount("L", 1)], tester);
   });
 
-  testWidgets("(7.2) Can add 3x L-size t-shirts to the cart", (tester) async {
+  testWidgets("Can add 3x L-size t-shirts to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 3, tester);
     await _checkItemsInCart([SizeAndCount("L", 3)], tester);
   });
 
-  testWidgets("(7.2) Can add 10x L-size t-shirts to the cart", (tester) async {
+  testWidgets("Can add 10x L-size t-shirts to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 10, tester);
     await _checkItemsInCart([SizeAndCount("L", 10)], tester);
   });
 
-  testWidgets("(7.2) Can add 2x L-size and 3x L-size t-shirts to the cart",
+  testWidgets("Can add 2x L-size and 3x L-size t-shirts to the cart",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 2, tester);
@@ -147,8 +147,7 @@ void main() {
         [SizeAndCount("L", 2), SizeAndCount("L", 3)], tester);
   });
 
-  testWidgets("(7.2) Can add twice 10x L-size t-shirts to the cart",
-      (tester) async {
+  testWidgets("Can add twice 10x L-size t-shirts to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 10, tester);
     await _addToCart("L", 10, tester);
@@ -156,7 +155,7 @@ void main() {
         [SizeAndCount("L", 10), SizeAndCount("L", 10)], tester);
   });
 
-  testWidgets("(7.2) Can add 2x L-size and 4x S-size t-shirts to the cart",
+  testWidgets("Can add 2x L-size and 4x S-size t-shirts to the cart",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 2, tester);
@@ -165,7 +164,7 @@ void main() {
         [SizeAndCount("L", 2), SizeAndCount("S", 4)], tester);
   });
 
-  testWidgets("(8) Click to the cart icon opens shopping cart page",
+  testWidgets("Click to the cart icon opens shopping cart page",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(find.byType(ShoppingCartPage), findsNothing);
@@ -173,19 +172,19 @@ void main() {
     expect(find.byType(ShoppingCartPage), findsOneWidget);
   });
 
-  testWidgets("(9) By default no items in the cart", (tester) async {
+  testWidgets("By default no items in the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     expect(find.byType(CartItemCard), findsNothing);
   });
 
-  testWidgets("(9) By default cart-empty message is shown", (tester) async {
+  testWidgets("By default cart-empty message is shown", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
-  testWidgets("(9) No delete icon when the cart is empty", (tester) async {
+  testWidgets("No delete icon when the cart is empty", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     try {
@@ -198,7 +197,7 @@ void main() {
     }
   });
 
-  testWidgets("(11) Find delete icon for first product", (tester) async {
+  testWidgets("Find delete icon for first product", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _navigateToCart(tester);
@@ -206,7 +205,7 @@ void main() {
     expect(trashButton, findsOneWidget);
   });
 
-  testWidgets("(11) Add and delete a product", (tester) async {
+  testWidgets("Add and delete a product", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _checkItemsInCart([SizeAndCount("M", 1)], tester);
@@ -215,7 +214,7 @@ void main() {
     expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
-  testWidgets("(11) Add three identical products, delete one", (tester) async {
+  testWidgets("Add three identical products, delete one", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _selectSize("M", tester);
     await _tapAdd(tester);
@@ -231,24 +230,24 @@ void main() {
         [SizeAndCount("M", 1), SizeAndCount("M", 1)], tester);
   });
 
-  testWidgets("(11) Add 3 items, delete 1st", (tester) async {
+  testWidgets("Add 3 items, delete 1st", (tester) async {
     await _testThreeProductDeletionScenario([0], tester);
   });
 
-  testWidgets("(11) Add 3 items, delete 2nd", (tester) async {
+  testWidgets("Add 3 items, delete 2nd", (tester) async {
     await _testThreeProductDeletionScenario([1], tester);
   });
 
-  testWidgets("(11) Add 3 items, delete 3rd", (tester) async {
+  testWidgets("Add 3 items, delete 3rd", (tester) async {
     await _testThreeProductDeletionScenario([2], tester);
   });
 
-  testWidgets("(11) Add 3 items, delete 1st and 3rd", (tester) async {
+  testWidgets("Add 3 items, delete 1st and 3rd", (tester) async {
     // After deleting the 1st item (index 0), the third item has now index 1
     await _testThreeProductDeletionScenario([0, 1], tester);
   });
 
-  testWidgets("(11) Add 3 items, delete all", (tester) async {
+  testWidgets("Add 3 items, delete all", (tester) async {
     // Delete 2nd (index 1), then 1st (index 0), then the third (index is now 0)
     await _testThreeProductDeletionScenario([1, 0, 0], tester);
   });
