@@ -21,7 +21,7 @@ void main() {
 
   testWidgets("(1.1) No item count in cart icon", (tester) async {
     await tester.pumpWidget(const MyApp());
-    expect(_getTotalItemCountText(tester), isNull);
+    expect(_getTotalItemCountText(tester), 0);
   });
 
   testWidgets("(2) No size selected by default", (tester) async {
@@ -215,6 +215,22 @@ void main() {
     expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
+  testWidgets("(11) Add three identical products, delete one", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _selectSize("M", tester);
+    await _tapAdd(tester);
+    await _tapAdd(tester);
+    await _tapAdd(tester);
+    await _checkItemsInCart(
+        [SizeAndCount("M", 1), SizeAndCount("M", 1), SizeAndCount("M", 1)],
+        tester);
+    await _navigateToCart(tester);
+    await _deleteItemFromCart(0, tester);
+    await _navigateBack(tester);
+    await _checkItemsInCart(
+        [SizeAndCount("M", 1), SizeAndCount("M", 1)], tester);
+  });
+
   testWidgets("(11) Add 3 items, delete 1st", (tester) async {
     await _testThreeProductDeletionScenario([0], tester);
   });
@@ -246,7 +262,7 @@ int? _getTotalItemCountText(WidgetTester tester) {
     String? value = widget.data;
     return value != null ? int.parse(value) : null;
   } catch (e) {
-    return null;
+    return 0;
   }
 }
 
@@ -423,6 +439,9 @@ Future<void> _testThreeProductDeletionScenario(
     SizeAndCount("M", 3),
     SizeAndCount("XL", 1),
   ];
+  for (final product in products) {
+    await _addToCart(product.size!, product.count, tester);
+  }
   await _checkItemsInCart(products, tester);
 
   for (final deleteIndex in itemsToDelete) {
