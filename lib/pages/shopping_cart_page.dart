@@ -7,7 +7,6 @@ import '../widgets/cart_item_card.dart';
 class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({Key? key}) : super(key: key);
   static const emptyCartMessage = "The cart is empty";
-  static const productName = "Green T-shirt";
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,8 @@ class ShoppingCartPage extends StatelessWidget {
     // If you use Riverpod, this should be stored in a provider
     // (probably StateNotifierProvider?)
     final shoppingCartItems = [
-      CartItem(productName, "M", 1),
-      CartItem(productName, "L", 3),
+      CartItem(CartItem.defaultProductName, "M", 1),
+      CartItem(CartItem.defaultProductName, "L", 3),
     ];
 
     return shoppingCartItems.map((item) => CartItemCard(item)).toList();
