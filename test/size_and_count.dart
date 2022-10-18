@@ -3,7 +3,7 @@ import 'package:exercise_e7/model/cart_item.dart';
 /// Represents size and count
 /// Used for tests only. For logic-code use CartItem
 class SizeAndCount {
-  final String size;
+  final String? size;
   final int count;
 
   SizeAndCount(this.size, this.count);

@@ -184,8 +184,14 @@ void main() {
   testWidgets("(10) No delete icon when the cart is empty", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
-    final Finder trashButton = _findDeleteButton(0);
-    expect(trashButton, findsNothing);
+    try {
+      final Finder trashButton = _findDeleteButton(0);
+      expect(false, isTrue); // we should not get this far
+    } catch (e) {
+      // We expect to get here because the findDeleteButton should throw
+      // an exception - no "Delete" button should be found
+      expect(true, isTrue);
+    }
   });
 
   testWidgets("(12) Find delete icon for first product", (tester) async {
