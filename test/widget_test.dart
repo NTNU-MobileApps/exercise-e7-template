@@ -105,6 +105,15 @@ void main() {
     expect(_isSizeErrorDisplayed(tester), isTrue);
   });
 
+  testWidgets("(7.1) Add a no-size, then M-size: no error", (tester) async {
+    await tester.pumpWidget(const MyApp());
+    await _tapAdd(tester);
+    expect(_isSizeErrorDisplayed(tester), isTrue);
+    await _selectSize("M", tester);
+    await _tapAdd(tester);
+    expect(_isSizeErrorDisplayed(tester), isFalse);
+  });
+
   testWidgets("(7.2) Can add one M-size t-shirt to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
