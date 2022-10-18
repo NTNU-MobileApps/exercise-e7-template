@@ -22,6 +22,9 @@ class CartItem {
     return CartItem(name ?? this.name, size ?? this.size, count ?? this.count);
   }
 
+  /// Returns true if the item contains valid values
+  bool isValid() => size != null && count > 1;
+
   @override
   String toString() {
     return 'CartItem{${count}x$size $name, id: $id}';
