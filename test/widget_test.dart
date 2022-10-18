@@ -104,37 +104,37 @@ void main() {
     expect(_isSubmitButtonEnabled(tester), isTrue);
   });
 
-  testWidgets("(8.1.1) Error when add a product with no size", (tester) async {
+  testWidgets("(7.1) Error when add a product with no size", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _tapAdd(tester);
     expect(_isSizeErrorDisplayed(tester), isTrue);
   });
 
-  testWidgets("(8.2) Can add one M-size t-shirt to the cart", (tester) async {
+  testWidgets("(7.2) Can add one M-size t-shirt to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _checkItemsInCart([SizeAndCount("M", 1)], tester);
   });
 
-  testWidgets("(8.2) Can add one L-size t-shirt to the cart", (tester) async {
+  testWidgets("(7.2) Can add one L-size t-shirt to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 1, tester);
     await _checkItemsInCart([SizeAndCount("L", 1)], tester);
   });
 
-  testWidgets("(8.2) Can add 3x L-size t-shirts to the cart", (tester) async {
+  testWidgets("(7.2) Can add 3x L-size t-shirts to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 3, tester);
     await _checkItemsInCart([SizeAndCount("L", 3)], tester);
   });
 
-  testWidgets("(8.2) Can add 10x L-size t-shirts to the cart", (tester) async {
+  testWidgets("(7.2) Can add 10x L-size t-shirts to the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 10, tester);
     await _checkItemsInCart([SizeAndCount("L", 10)], tester);
   });
 
-  testWidgets("(8.2) Can add 2x L-size and 3x L-size t-shirts to the cart",
+  testWidgets("(7.2) Can add 2x L-size and 3x L-size t-shirts to the cart",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 2, tester);
@@ -143,7 +143,7 @@ void main() {
         [SizeAndCount("L", 2), SizeAndCount("L", 3)], tester);
   });
 
-  testWidgets("(8.2) Can add twice 10x L-size t-shirts to the cart",
+  testWidgets("(7.2) Can add twice 10x L-size t-shirts to the cart",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 10, tester);
@@ -152,7 +152,7 @@ void main() {
         [SizeAndCount("L", 10), SizeAndCount("L", 10)], tester);
   });
 
-  testWidgets("(8.2) Can add 2x L-size and 4x S-size t-shirts to the cart",
+  testWidgets("(7.2) Can add 2x L-size and 4x S-size t-shirts to the cart",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("L", 2, tester);
@@ -161,7 +161,7 @@ void main() {
         [SizeAndCount("L", 2), SizeAndCount("S", 4)], tester);
   });
 
-  testWidgets("(9) Click to the cart icon opens shopping cart page",
+  testWidgets("(8) Click to the cart icon opens shopping cart page",
       (tester) async {
     await tester.pumpWidget(const MyApp());
     expect(find.byType(ShoppingCartPage), findsNothing);
@@ -169,19 +169,19 @@ void main() {
     expect(find.byType(ShoppingCartPage), findsOneWidget);
   });
 
-  testWidgets("(10) By default no items in the cart", (tester) async {
+  testWidgets("(9) By default no items in the cart", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     expect(find.byType(CartItemCard), findsNothing);
   });
 
-  testWidgets("(10) By default cart-empty message is shown", (tester) async {
+  testWidgets("(9) By default cart-empty message is shown", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
-  testWidgets("(10) No delete icon when the cart is empty", (tester) async {
+  testWidgets("(9) No delete icon when the cart is empty", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _navigateToCart(tester);
     try {
@@ -194,7 +194,7 @@ void main() {
     }
   });
 
-  testWidgets("(12) Find delete icon for first product", (tester) async {
+  testWidgets("(11) Find delete icon for first product", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _navigateToCart(tester);
@@ -202,7 +202,7 @@ void main() {
     expect(trashButton, findsOneWidget);
   });
 
-  testWidgets("(12) Add and delete a product", (tester) async {
+  testWidgets("(11) Add and delete a product", (tester) async {
     await tester.pumpWidget(const MyApp());
     await _addToCart("M", 1, tester);
     await _checkItemsInCart([SizeAndCount("M", 1)], tester);
@@ -211,24 +211,24 @@ void main() {
     expect(_isEmptyCartMessageVisible(), isTrue);
   });
 
-  testWidgets("(12) Add 3 items, delete 1st", (tester) async {
+  testWidgets("(11) Add 3 items, delete 1st", (tester) async {
     await _testThreeProductDeletionScenario([0], tester);
   });
 
-  testWidgets("(12) Add 3 items, delete 2nd", (tester) async {
+  testWidgets("(11) Add 3 items, delete 2nd", (tester) async {
     await _testThreeProductDeletionScenario([1], tester);
   });
 
-  testWidgets("(12) Add 3 items, delete 3rd", (tester) async {
+  testWidgets("(11) Add 3 items, delete 3rd", (tester) async {
     await _testThreeProductDeletionScenario([2], tester);
   });
 
-  testWidgets("(12) Add 3 items, delete 1st and 3rd", (tester) async {
+  testWidgets("(11) Add 3 items, delete 1st and 3rd", (tester) async {
     // After deleting the 1st item (index 0), the third item has now index 1
     await _testThreeProductDeletionScenario([0, 1], tester);
   });
 
-  testWidgets("(12) Add 3 items, delete all", (tester) async {
+  testWidgets("(11) Add 3 items, delete all", (tester) async {
     // Delete 2nd (index 1), then 1st (index 0), then the third (index is now 0)
     await _testThreeProductDeletionScenario([1, 0, 0], tester);
   });
