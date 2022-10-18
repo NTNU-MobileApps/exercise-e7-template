@@ -28,7 +28,7 @@ class ProductPage extends StatelessWidget {
           children: <Widget>[
             _buildProductTitle(),
             _buildImage(),
-            SizeSelector(onSelected: _sizeSelected),
+            const SizeSelector(),
             _buildCountSelectors(),
             _buildButton()
           ],
@@ -109,12 +109,6 @@ class ProductPage extends StatelessWidget {
         child: Text("Add to cart"),
       ),
     );
-  }
-
-  /// This method is called when a new size is selected
-  void _sizeSelected(String? size) {
-    print("Selected size $size");
-    // TODO - implement the necessary logic
   }
 
   /// This method is called when the user presses on the "+" button -

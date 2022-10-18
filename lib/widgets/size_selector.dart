@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 /// Note: this must be a StatefulWidget, otherwise the DropdownButton
 /// value can't be updated
 class SizeSelector extends StatefulWidget {
-  final Function(String?) onSelected;
-
-  const SizeSelector({Key? key, required this.onSelected}) : super(key: key);
+  const SizeSelector({Key? key}) : super(key: key);
 
   static const Key selectorKey = Key("size_selector");
 
@@ -43,8 +41,5 @@ class _SizeSelectorState extends State<SizeSelector> {
     setState(() {
       selectedValue = size;
     });
-
-    // Notify the listener (parent)
-    widget.onSelected(size != SizeSelector.noSize ? size : null);
   }
 }
