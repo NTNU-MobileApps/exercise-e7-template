@@ -17,11 +17,6 @@ class CartItem {
   /// count: how many units of the product are included in this cart-item
   CartItem(this.name, this.size, this.count) : id = _itemCounter++;
 
-  /// Copy a CartItem, set necessary fields (or use the old values)
-  CartItem copyWith({String? name, String? size, int? count}) {
-    return CartItem(name ?? this.name, size ?? this.size, count ?? this.count);
-  }
-
   /// Returns true if the item contains valid values
   bool isValid() => size != null && count > 0;
 
