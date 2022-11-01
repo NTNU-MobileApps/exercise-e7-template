@@ -6,7 +6,7 @@ at [NTNU](https://ntnu.edu), campus [Aalesund](https://www.ntnu.edu/alesund).
 
 ## Intention
 
-The intention is to practice implementing business logic separately from the user interface. Teh
+The intention is to practice implementing business logic separately from the user interface. The
 suggested way to solve the exercise is to use the [Riverpod library](https://riverpod.dev/).
 However, you are allowed to use whatever methods you find reasonable.
 
