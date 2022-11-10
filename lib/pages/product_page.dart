@@ -168,11 +168,13 @@ class ProductPage extends StatelessWidget {
   void _addToCart(WidgetRef ref) {
     print("Adding product(s) to the cart...");
     final CartItem currentItem = ref.read(tempItemProvider);
+    String? errorMessage;
     if (currentItem.size != null) {
       ref.read(cartItemProvider.notifier).add(currentItem);
     } else {
-      ref.read(errorProvider.notifier).state = sizeErrorMessage;
+      errorMessage = sizeErrorMessage;
     }
+    ref.read(errorProvider.notifier).state = errorMessage;
   }
 
   /// Navigate to the shopping cart page
