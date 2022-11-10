@@ -1,3 +1,4 @@
+import 'package:exercise_e7/providers/cart_item_provider.dart';
 import 'package:exercise_e7/providers/error_provider.dart';
 import 'package:exercise_e7/providers/temp_item_provider.dart';
 import 'package:flutter/material.dart';
@@ -60,19 +61,21 @@ class ProductPage extends StatelessWidget {
   /// Build the action-button to be shown in the action bar.
   /// On click it takes to the shopping-cart page
   Widget _buildShoppingCartButton(BuildContext context) {
-    return Row(
-      children: [
-        // TODO - this must show the number of items in the cart dynamically:
-        //  - When no items in the cart - hide this text (remove the Text widget)
-        //  - When one t-shirt added to the cart, this must show "1"
-        //  - When two L-sized shirts + three XL-shirts added to the cart, this must show 5 (not 2)
-        Text("4", key: cartItemCountKey),
-        IconButton(
+    return Consumer(
+      builder: (context, ref, _) {
+        final int cartUnitCount =
+            ref.read(cartItemProvider.notifier).totalProductCount();
+        final List<Widget> rowItems = [];
+        if (cartUnitCount > 0) {
+          rowItems.add(Text("$cartUnitCount", key: cartItemCountKey));
+        }
+        rowItems.add(IconButton(
           key: openCartKey,
           onPressed: () => _showShoppingCartPage(context),
           icon: const Icon(Icons.shopping_cart),
-        ),
-      ],
+        ));
+        return Row(children: rowItems);
+      },
     );
   }
 
