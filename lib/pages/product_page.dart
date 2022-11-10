@@ -65,6 +65,7 @@ class ProductPage extends StatelessWidget {
       builder: (context, ref, _) {
         final int cartUnitCount =
             ref.read(cartItemProvider.notifier).totalProductCount();
+        final cartItems = ref.watch(cartItemProvider);
         final List<Widget> rowItems = [];
         if (cartUnitCount > 0) {
           rowItems.add(Text("$cartUnitCount", key: cartItemCountKey));
