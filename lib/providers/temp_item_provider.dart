@@ -28,6 +28,12 @@ class TempItemNotifier extends StateNotifier<CartItem> {
       state = CartItem(state.name, state.size, state.count - 1);
     }
   }
+
+  /// Set the seize for products in the "temporary cart item"
+  void setSize(String? size) {
+    print("Setting size to $size");
+    state = CartItem(state.name, size, state.count);
+  }
 }
 
 final tempItemProvider =
