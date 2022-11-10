@@ -19,7 +19,7 @@ class SizeSelector extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String? selectedValue = ref.watch(tempItemProvider).size;
+    final String selectedValue = ref.watch(tempItemProvider).size ?? noSize;
 
     return DropdownButton<String>(
       key: SizeSelector.selectorKey,
