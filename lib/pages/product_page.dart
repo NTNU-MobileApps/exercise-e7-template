@@ -1,7 +1,9 @@
 import 'package:exercise_e7/providers/error_provider.dart';
+import 'package:exercise_e7/providers/temp_item_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/cart_item.dart';
 import '../widgets/size_selector.dart';
 import 'shopping_cart_page.dart';
 
@@ -97,24 +99,34 @@ class ProductPage extends StatelessWidget {
   /// increment and decrement the count
   Widget _buildCountSelectors() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            key: minusButtonKey,
-            onPressed: _decrementCount,
-            icon: const Icon(Icons.remove),
-          ),
-          Text("Count: 7", key: addCountKey),
-          IconButton(
-            key: plusButtonKey,
-            onPressed: _incrementCount,
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-    );
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer(
+          builder: (context, ref, _) {
+            final CartItem tempItem = ref.watch(tempItemProvider);
+            final notifier = ref.read(tempItemProvider.notifier);
+            final isDecrementAllowed = notifier.isDecrementAllowed();
+            final isIncrementAllowed = notifier.isIncrementAllowed();
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  key: minusButtonKey,
+                  onPressed:
+                      isDecrementAllowed ? () => _decrementCount(ref) : null,
+                  icon: const Icon(Icons.remove),
+                ),
+                Text("Count: ${tempItem.count}", key: addCountKey),
+                IconButton(
+                  key: plusButtonKey,
+                  onPressed:
+                      isIncrementAllowed ? () => _incrementCount(ref) : null,
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            );
+          },
+        ));
   }
 
   /// Build the "Add to cart" button
@@ -135,16 +147,16 @@ class ProductPage extends StatelessWidget {
 
   /// This method is called when the user presses on the "+" button -
   /// the count must be increased
-  void _incrementCount() {
+  void _incrementCount(WidgetRef ref) {
     print("Count++");
-    // TODO - implement the necessary logic
+    ref.read(tempItemProvider.notifier).increment();
   }
 
   /// This method is called when the user presses on the "-" button -
   /// the count must be decreased
-  void _decrementCount() {
+  void _decrementCount(WidgetRef ref) {
     print("Count--");
-    // TODO - implement the necessary logic
+    ref.read(tempItemProvider.notifier).decrement();
   }
 
   /// This method is called when the user presses on the "Add to cart" button -
