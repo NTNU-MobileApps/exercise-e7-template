@@ -1,4 +1,6 @@
+import 'package:exercise_e7/providers/error_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/size_selector.dart';
 import 'shopping_cart_page.dart';
@@ -30,10 +32,26 @@ class ProductPage extends StatelessWidget {
             _buildImage(),
             const SizeSelector(),
             _buildCountSelectors(),
+            _buildErrorMessage(),
             _buildButton()
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildErrorMessage() {
+    return Consumer(
+      builder: (context, ref, _) {
+        final String? error = ref.watch(errorProvider);
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            error != null ? error : "",
+            style: const TextStyle(color: Colors.red),
+          ),
+        );
+      },
     );
   }
 
@@ -101,13 +119,17 @@ class ProductPage extends StatelessWidget {
 
   /// Build the "Add to cart" button
   Widget _buildButton() {
-    return ElevatedButton(
-      key: addToCartKey,
-      onPressed: _addToCart,
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Text("Add to cart"),
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        return ElevatedButton(
+          key: addToCartKey,
+          onPressed: () => _addToCart(ref),
+          child: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text("Add to cart"),
+          ),
+        );
+      },
     );
   }
 
@@ -127,8 +149,10 @@ class ProductPage extends StatelessWidget {
 
   /// This method is called when the user presses on the "Add to cart" button -
   /// a new item must be added to the cart, using the appropriate size and count
-  void _addToCart() {
+  void _addToCart(WidgetRef ref) {
     print("Adding product(s) to the cart...");
+    // Set the error message
+    ref.read(errorProvider.notifier).state = "An error";
     // TODO - implement the necessary logic
   }
 
