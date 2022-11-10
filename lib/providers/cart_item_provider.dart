@@ -3,10 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Holds the shopping cart items
 class CartItemNotifier extends StateNotifier<List<CartItem>> {
-  CartItemNotifier() : super([
-  //   CartItem("Shirt", "M", 6),
-  // CartItem("Hat", "S", 2)
-  ]);
+  CartItemNotifier() : super([]);
 
   /// Number of products (units) in the cart.
   /// Note: one item can hold several units of a product
@@ -22,9 +19,14 @@ class CartItemNotifier extends StateNotifier<List<CartItem>> {
   void add(CartItem item) {
     state = [...state, item];
   }
+
+  /// Delete the item with given ID from the shopping cart
+  void delete(int itemId) {
+    state = state.where((item) => item.id != itemId).toList();
+  }
 }
 
 final cartItemProvider =
-StateNotifierProvider<CartItemNotifier, List<CartItem>>((ref) {
+    StateNotifierProvider<CartItemNotifier, List<CartItem>>((ref) {
   return CartItemNotifier();
 });

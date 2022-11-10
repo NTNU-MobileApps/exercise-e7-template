@@ -34,6 +34,11 @@ class TempItemNotifier extends StateNotifier<CartItem> {
     print("Setting size to $size");
     state = CartItem(state.name, size, state.count);
   }
+
+  /// Clone the current CartItem, so that it gets a new ID
+  void ensureNewId() {
+    state = CartItem(state.name, state.size, state.count);
+  }
 }
 
 final tempItemProvider =

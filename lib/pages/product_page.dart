@@ -171,6 +171,7 @@ class ProductPage extends StatelessWidget {
     String? errorMessage;
     if (currentItem.size != null) {
       ref.read(cartItemProvider.notifier).add(currentItem);
+      ref.read(tempItemProvider.notifier).ensureNewId();
     } else {
       errorMessage = sizeErrorMessage;
     }
