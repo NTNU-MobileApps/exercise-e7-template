@@ -17,6 +17,11 @@ class CartItemNotifier extends StateNotifier<List<CartItem>> {
     }
     return unitCount;
   }
+
+  /// Add an item to the cart
+  void add(CartItem item) {
+    state = [...state, item];
+  }
 }
 
 final cartItemProvider =
