@@ -18,8 +18,10 @@ class ShoppingCartPage extends ConsumerWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 16),
-        child: Column(
-          children: _buildCartItems(ref),
+        child: SingleChildScrollView(
+          child: Column(
+            children: _buildCartItems(ref),
+          ),
         ),
       ),
     );
